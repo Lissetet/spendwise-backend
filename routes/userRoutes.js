@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const validator = require('validator');
 const router = express.Router()
-const { getAll, getOne } = require('./routeHelpers');
+const { getAll, getOne, validateEmail, createItem } = require('./routeHelpers');
 
 const User = require('../models/User');
 
@@ -13,24 +12,7 @@ router.get('/', getAll(User));
 router.get('/:id', getOne(User));
 
 // CREATE one user
-router.post('/', async (req, res) => {
-  const user = new User({...req.body});
-
-  if (!validator.isEmail(req.body.email)) {
-    return res.status(400).json({ message: 'Invalid email' });
-  }
-
-  try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    if (err.code === 11000 && err.keyValue.email === req.body.email) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-    res.status(400).json({ message: err.message });
-  }
-
-});
+router.post('/', validateEmail(), createItem(User));
 
 // UPDATE one user
 router.patch('/:id', getUser, async (req, res) => {

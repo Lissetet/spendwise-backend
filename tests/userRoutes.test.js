@@ -150,7 +150,7 @@ describe('User routes', () => {
     const res = await request(app).post('/users').send(user1);
     
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toEqual({ message: 'Email already exists' });
+    expect(res.body).toEqual({ message: 'email already exists' });
   });
 
   test('should return 400 if email is invalid', async () => {
