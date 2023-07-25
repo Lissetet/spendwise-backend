@@ -24,7 +24,6 @@ const getItem = (Model) => async (req, res, next) => {
   let item;
   const modelName = Model.modelName.toLowerCase();
 
-  // Check if ID is valid
   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: `Invalid ${modelName} ID` });
   }
@@ -38,12 +37,12 @@ const getItem = (Model) => async (req, res, next) => {
     return res.status(500).json({ message: err.message });
   }
 
-  res[modelName] = item;
+  res.item = item;
   next();
 }
 
 const getOne = (Model) => async (req, res) => {
-  res.json(res[Model.modelName.toLowerCase()]);
+  res.json(res.item);
 }
 
 const createItem = (Model) => async (req, res) => {
@@ -61,6 +60,41 @@ const createItem = (Model) => async (req, res) => {
   }
 }
 
+const updateItem = (Model, allowedUpdates) => async (req, res) => {
+  const updates = Object.keys(req.body);
+  const isValid = (update) => allowedUpdates.includes(update) && req.body[update] != null;
+  const isValidOperation = updates.every(isValid);
+
+  if (!isValidOperation) {
+    const invalidUpdates = updates.filter(update => !isValid(update));
+    const message = 'Invalid updates'
+    return res.status(400).json({ message, invalidUpdates });
+  } else {
+    updates.forEach(update => res.item[update] = req.body[update]);
+  }
+
+  try {
+    const updatedItem = await res.item.save();
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+const deleteItem = (Model) => async (req, res) => {
+  const modelName = Model.modelName.toLowerCase();
+
+  try {
+    const item = await Model.findByIdAndDelete(req.params.id);
+    if (item == null) {
+      return res.status(404).json({ message: `Cannot find ${modelName}` });
+    }
+    res.json({ message: `Deleted ${modelName}` });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
 module.exports = {
-  getAll, getItem, validateEmail, createItem, getOne
+  getAll, getItem, validateEmail, createItem, getOne, updateItem, deleteItem
 }

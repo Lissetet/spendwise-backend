@@ -128,7 +128,7 @@ describe('User routes', () => {
     const res = await request(app).delete(`/users/${_id}`);
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toEqual({ message: 'Deleted User'});
+    expect(res.body).toEqual({ message: 'Deleted user'});
   });
 
   test('should return 404 if user not found', async () => {
@@ -167,6 +167,24 @@ describe('User routes', () => {
     
     expect(res.statusCode).toEqual(400);
     expect(res.body).toEqual({ message: 'Invalid email' });
+  });
+
+  test('should return 400 if invalid update passed in', async () => {
+    const { body: { _id } } = await request(app).post('/users').send(user1);
+
+    const res = await request(app).patch(`/users/${_id}`).send({invalid: 'invalid'});
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toEqual({ message: 'Invalid updates', invalidUpdates: ['invalid'] });
+  });
+
+  test('should return 400 if null update passed in', async () => {
+    const { body: { _id } } = await request(app).post('/users').send(user1);
+
+    const res = await request(app).patch(`/users/${_id}`).send({firstName: null});
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toEqual({ message: 'Invalid updates', invalidUpdates: ['firstName'] });
   });
   
 });

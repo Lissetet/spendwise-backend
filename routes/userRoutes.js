@@ -1,7 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router()
-const { getAll, getItem, validateEmail, createItem, getOne } = require('./routeHelpers');
+const { 
+  getAll, 
+  getItem, 
+  getOne, 
+  createItem, 
+  updateItem, 
+  deleteItem, 
+  validateEmail
+} = require('./routeHelpers');
 
 const User = require('../models/User');
 
@@ -15,60 +23,10 @@ router.get('/:id', getItem(User), getOne(User));
 router.post('/', validateEmail(), createItem(User));
 
 // UPDATE one user
-router.patch('/:id', getItem(User), async (req, res) => {
-  if (req.body.firstName != null) {
-    res.user.firstName = req.body.firstName;
-  }
-  if (req.body.lastName != null) {
-    res.user.lastName = req.body.lastName;
-  }
-  if (req.body.email != null) {
-    res.user.email = req.body.email;
-  }
-  if (req.body.password != null) {
-    res.user.password = req.body.password;
-  }
-  try {
-    const updatedUser = await res.user.save();
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+const allowedUpdates = ['firstName', 'lastName', 'email', 'password'];
+router.patch('/:id', getItem(User), updateItem(User, allowedUpdates)); 
 
 // DELETE a user
-router.delete('/:id', async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (user == null) {
-      return res.status(404).json({ message: 'Cannot find user' });
-    }
-    res.json({ message: 'Deleted User' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Middleware function for getting user by ID
-async function getUser(req, res, next) {
-  let user;
-
-  // Check if ID is valid
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: 'Invalid user ID' });
-  }
-  
-  try {
-    user = await User.findById(req.params.id);
-    if (user == null) {
-      return res.status(404).json({ message: 'Cannot find user' });
-    }
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-
-  res.user = user;
-  next();
-}
+router.delete('/:id', getItem(User), deleteItem(User));
 
 module.exports = router;
