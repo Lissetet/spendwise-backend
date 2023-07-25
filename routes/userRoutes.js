@@ -2,23 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const router = express.Router()
+const { getAll, getOne } = require('./routeHelpers');
 
 const User = require('../models/User');
 
 // GET all users
-router.get('/', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch(err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+router.get('/', getAll(User));
 
 // GET one user
-router.get('/:id', getUser, (req, res) => {
-  res.json(res.user);
-});
+router.get('/:id', getOne(User));
 
 // CREATE one user
 router.post('/', async (req, res) => {
