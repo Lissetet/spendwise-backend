@@ -1,4 +1,6 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const validator = require('validator');
 const router = express.Router()
 
 const User = require('../models/User');
@@ -27,10 +29,18 @@ router.post('/', async (req, res) => {
     password: req.body.password,
   });
 
+
+  if (!validator.isEmail(req.body.email)) {
+    return res.status(400).json({ message: 'Invalid email' });
+  }
+
   try {
     const newUser = await user.save();
     res.status(201).json(newUser);
   } catch (err) {
+    if (err.code === 11000 && err.keyValue.email === req.body.email) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
     res.status(400).json({ message: err.message });
   }
 
@@ -74,6 +84,12 @@ router.delete('/:id', async (req, res) => {
 // Middleware function for getting user by ID
 async function getUser(req, res, next) {
   let user;
+
+  // Check if ID is valid
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid user ID' });
+  }
+  
   try {
     user = await User.findById(req.params.id);
     if (user == null) {
