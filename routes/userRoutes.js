@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router()
-const { getAll, getOne, validateEmail, createItem } = require('./routeHelpers');
+const { getAll, getItem, validateEmail, createItem, getOne } = require('./routeHelpers');
 
 const User = require('../models/User');
 
@@ -9,13 +9,13 @@ const User = require('../models/User');
 router.get('/', getAll(User));
 
 // GET one user
-router.get('/:id', getOne(User));
+router.get('/:id', getItem(User), getOne(User));
 
 // CREATE one user
 router.post('/', validateEmail(), createItem(User));
 
 // UPDATE one user
-router.patch('/:id', getUser, async (req, res) => {
+router.patch('/:id', getItem(User), async (req, res) => {
   if (req.body.firstName != null) {
     res.user.firstName = req.body.firstName;
   }

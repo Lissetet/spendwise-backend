@@ -20,7 +20,7 @@ const getAll = (Model) => async (req, res) => {
   }
 }
 
-const getOne = (Model) => async (req, res, next) => {
+const getItem = (Model) => async (req, res, next) => {
   let item;
   const modelName = Model.modelName.toLowerCase();
 
@@ -38,7 +38,12 @@ const getOne = (Model) => async (req, res, next) => {
     return res.status(500).json({ message: err.message });
   }
 
-  res.json(item);
+  res[modelName] = item;
+  next();
+}
+
+const getOne = (Model) => async (req, res) => {
+  res.json(res[Model.modelName.toLowerCase()]);
 }
 
 const createItem = (Model) => async (req, res) => {
@@ -57,5 +62,5 @@ const createItem = (Model) => async (req, res) => {
 }
 
 module.exports = {
-  getAll, getOne, validateEmail, createItem
+  getAll, getItem, validateEmail, createItem, getOne
 }
