@@ -17,7 +17,15 @@ app.use(express.json());
 
 // initialize routes
 const userRoutes = require('./routes/userRoutes');
+const budgetRoutes = require('./routes/budgetRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const walletRoutes = require('./routes/walletRoutes');
 app.use('/users', userRoutes);
+app.use('/budgets', budgetRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/transactions', transactionRoutes);
+app.use('/wallets', walletRoutes);
 
 // start server
 app.listen(3000, () => console.log("Server started on port 3000"));
