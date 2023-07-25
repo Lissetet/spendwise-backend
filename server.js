@@ -15,5 +15,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// initialize routes
+const userRoutes = require('./routes/userRoutes');
+app.use('/users', userRoutes);
+
 // start server
 app.listen(3000, () => console.log("Server started on port 3000"));
