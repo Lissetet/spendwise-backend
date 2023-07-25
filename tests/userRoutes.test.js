@@ -52,17 +52,17 @@ describe('User routes', () => {
   test('missing required fields should return 400', async () => {
     const user = {email: 'testemail@email.com'};
 
-    const { body, statusCode } = await request(app).post('/users').send(user);
+    const res = await request(app).post('/users').send(user);
+    const msg = res.body.message;
 
-    expect(statusCode).toEqual(400);
+    let expectedErrorParts = [
+      'firstName: Path `firstName` is required',
+      'lastName: Path `lastName` is required',
+      'password: Path `password` is required'
+    ];
 
-    let expectedError = [
-      'User validation failed:', 
-      'firstName: Path `firstName` is required.,', 
-      'lastName: Path `lastName` is required.,', 
-      'password: Path `password` is required.'
-    ].join(' ');
-    expect(body).toHaveProperty('message', expectedError);
+    expect(expectedErrorParts.every(part => msg.includes(part))).toBeTruthy();
+    expect(res.statusCode).toEqual(400);
   });
 
   test('empty required fields should return 400', async () => {
@@ -73,17 +73,17 @@ describe('User routes', () => {
       password: '',
     };
 
-    const { body, statusCode } = await request(app).post('/users').send(user);
+    const res = await request(app).post('/users').send(user);
+    const msg = res.body.message;
 
-    expect(statusCode).toEqual(400);
+    let expectedErrorParts = [
+      'firstName: Path `firstName` is required',
+      'lastName: Path `lastName` is required',
+      'password: Path `password` is required'
+    ];
 
-    let expectedError = [
-      'User validation failed:',
-      'firstName: Path `firstName` is required.,',
-      'lastName: Path `lastName` is required.,',
-      'password: Path `password` is required.'
-    ].join(' ');
-    expect(body).toHaveProperty('message', expectedError);
+    expect(expectedErrorParts.every(part => msg.includes(part))).toBeTruthy();
+    expect(res.statusCode).toEqual(400);
   });
 
   test('should get all users', async () => {

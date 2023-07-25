@@ -14,13 +14,7 @@ router.get('/:id', getOne(User));
 
 // CREATE one user
 router.post('/', async (req, res) => {
-  const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password,
-  });
-
+  const user = new User({...req.body});
 
   if (!validator.isEmail(req.body.email)) {
     return res.status(400).json({ message: 'Invalid email' });
