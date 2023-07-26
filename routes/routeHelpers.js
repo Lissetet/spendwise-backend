@@ -1,3 +1,4 @@
+const { query } = require('express');
 const mongoose = require('mongoose');
 const validator = require('validator');
 
@@ -95,6 +96,41 @@ const deleteItem = (Model) => async (req, res) => {
   }
 }
 
+const getByQuery = (Model, allowedQueryParams) => async (req, res) => {
+  const modelName = Model.modelName.toLowerCase();
+  const unique = req.query.unique !== undefined;
+  delete req.query.unique;
+  const queryKeys = Object.keys(req.query);
+  const validQuery = queryKeys.every(key => allowedQueryParams.includes(key));
+
+  if (!validQuery) {
+    const errorMsg = `Invalid query. It should have at least one field.`;
+    const errorObj = { message: errorMsg, allowedQueryParams };
+    return res.status(400).json({ ...errorObj });
+  }
+
+  try {
+    const items = await Model.find(req.query);
+    console.log(items)
+    if (unique && items.length > 1) {
+      return res.status(400).json({ message: `Duplicate values exist` });
+    } else if (unique && items.length === 1) {
+      return res.status(200).json(items[0]);
+    } else {
+      return res.status(200).json(items);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
 module.exports = {
-  getAll, getItem, validateEmail, createItem, getOne, updateItem, deleteItem
+  getAll, 
+  getItem, 
+  validateEmail, 
+  createItem, 
+  getOne, 
+  updateItem, 
+  deleteItem, 
+  getByQuery
 }
