@@ -166,5 +166,21 @@ describe('Wallet routes', () => {
     expect(statusCode).toEqual(400);
     expect(body).toEqual({ message: 'Invalid updates', invalidUpdates: ['name'] });
   });
+
+  test('should return all wallets for a user when queried', async () => {
+    await createWallet(wallet1);
+    await createWallet(wallet2);
+
+    const res = await request(app).get(`/wallets/find?user=${user1Id}`);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(1);
+    expect(res.body[0]).toMatchObject({...wallet1, user: user1Id.toString()});
+
+    const res2 = await request(app).get(`/wallets/find?user=${user2Id}`);
+    expect(res2.statusCode).toEqual(200);
+    expect(res2.body.length).toEqual(1);
+    expect(res2.body[0]).toMatchObject({...wallet2, user: user2Id.toString()});
+  });
  
 });
