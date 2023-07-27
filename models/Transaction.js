@@ -9,7 +9,7 @@ const TransactionSchema = new mongoose.Schema({
     required: true, 
     enum: ['income', 'expense', 'transfer', 'adjustment', 'other'] 
   },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   wallet: { type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
 });
