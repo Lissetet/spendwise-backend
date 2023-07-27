@@ -6,13 +6,17 @@ const {
   getOne, 
   createItem, 
   updateItem, 
-  deleteItem
+  deleteItem,
+  getByQuery
 } = require('./routeHelpers');
 
 const Wallet = require('../models/Wallet');
 
 // GET all Wallets
 router.get('/', getAll(Wallet));
+
+// GET wallet/s by query parameters
+router.get('/find', getByQuery(Wallet, ['user']));
 
 // GET one Wallet
 router.get('/:id', getItem(Wallet), getOne(Wallet));
