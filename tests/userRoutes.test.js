@@ -227,4 +227,44 @@ describe('User routes', () => {
     expect(body).toEqual({ message: 'Duplicate values exist' });
   });
 
+  test('should return all wallets for a user', async () => {
+    const userResponse1 = await createUser(user1);
+    const userResponse2 = await createUser(user2);
+    const id1 = userResponse1.body._id;
+    const id2 = userResponse2.body._id;
+
+    await request(app).post('/wallets').send({...wallet1, user: id1});
+    await request(app).post('/wallets').send({...wallet2, user: id2});
+
+    const walletsResponse1 = await request(app).get(`/users/${id1}/wallets`);
+    const walletsResponse2 = await request(app).get(`/users/${id2}/wallets`);
+
+    expect(walletsResponse1.statusCode).toEqual(200);
+    expect(walletsResponse1.body.length).toEqual(1);
+    expect(walletsResponse1.body).toContainEqual(expect.objectContaining(wallet1));
+
+    expect(walletsResponse2.statusCode).toEqual(200);
+    expect(walletsResponse2.body.length).toEqual(1);
+    expect(walletsResponse2.body).toContainEqual(expect.objectContaining(wallet2));
+  });
+
+  test('should delete all wallets for a user when user is deleted', async () => {
+    const { body: { _id } } = await createUser(user1);
+    await request(app).post('/wallets').send({...wallet1, user: _id});
+    await request(app).post('/wallets').send({...wallet2, user: _id});
+
+    //get all wallets for user
+    const walletsResponse = await request(app).get(`/users/${_id}/wallets`);
+    expect(walletsResponse.statusCode).toEqual(200);
+    expect(walletsResponse.body.length).toEqual(2);
+
+    //delete user
+    const userResponse = await request(app).delete(`/users/${_id}`);
+    expect(userResponse.statusCode).toEqual(200);
+    expect(userResponse.body).toEqual({ message: 'Deleted user' });
+    //get all wallets for user
+    const walletsResponse2 = await request(app).get(`/users/${_id}/wallets`);
+    expect(walletsResponse2.statusCode).toEqual(200);
+    expect(walletsResponse2.body.length).toEqual(0);
+  });
 });
