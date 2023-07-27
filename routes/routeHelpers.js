@@ -87,9 +87,11 @@ const deleteItem = (Model) => async (req, res) => {
 
   try {
     const item = await Model.findByIdAndDelete(req.params.id);
+
     if (item == null) {
       return res.status(404).json({ message: `Cannot find ${modelName}` });
     }
+
     res.json({ message: `Deleted ${modelName}` });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -97,7 +99,6 @@ const deleteItem = (Model) => async (req, res) => {
 }
 
 const getByQuery = (Model, allowedQueryParams) => async (req, res) => {
-  const modelName = Model.modelName.toLowerCase();
   const unique = req.query.unique !== undefined;
   delete req.query.unique;
   const queryKeys = Object.keys(req.query);
@@ -111,7 +112,6 @@ const getByQuery = (Model, allowedQueryParams) => async (req, res) => {
 
   try {
     const items = await Model.find(req.query);
-    console.log(items)
     if (unique && items.length > 1) {
       return res.status(400).json({ message: `Duplicate values exist` });
     } else if (unique && items.length === 1) {
@@ -121,7 +121,13 @@ const getByQuery = (Model, allowedQueryParams) => async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
-  }
+  } 
+}
+
+const getAllChildren = (Model) => async (req, res) => {
+  const { id } = req.params;
+  const items = await Model.find({ user: id });
+  res.json(items);
 }
 
 module.exports = {
@@ -132,5 +138,6 @@ module.exports = {
   getOne, 
   updateItem, 
   deleteItem, 
-  getByQuery
+  getByQuery,
+  getAllChildren
 }
