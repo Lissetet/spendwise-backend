@@ -8,12 +8,14 @@ const {
   updateItem, 
   deleteItem, 
   getByQuery,
+  getAllChildren,
   validateEmail
 } = require('./routeHelpers');
 
 const User = require('../models/User');
+const Wallet = require('../models/Wallet');
 
-// GET one user by query parameters
+// GET user/s by query parameters
 const allowedQueryParams = ['email', 'firstName', 'lastName'];
 router.get('/find', getByQuery(User, allowedQueryParams));
 
@@ -32,5 +34,8 @@ router.patch('/:id', getItem(User), updateItem(User, allowedUpdates));
 
 // DELETE a user
 router.delete('/:id', getItem(User), deleteItem(User));
+
+// GET all wallets for a user
+router.get('/:id/wallets', getAllChildren(Wallet));
 
 module.exports = router;
