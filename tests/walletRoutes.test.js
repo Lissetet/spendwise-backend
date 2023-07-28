@@ -3,7 +3,10 @@ const mongoose = require("mongoose");
 const app = require('../app');
 const User = require('../models/User');
 const Wallet = require('../models/Wallet');
-const { user1, user2, wallet1, wallet2 } = require('./testsData');
+const { users, wallets } = require('./testsData');
+
+const [user1, user2] = users;
+const [wallet1, wallet2] = wallets;
 
 require("dotenv").config();
 
@@ -20,8 +23,9 @@ beforeAll(async () => {
     const newUser2 = await new User(user2).save();
     
     user1Id = newUser1._id;
-    wallet1.user = user1Id;
     user2Id = newUser2._id;
+    
+    wallet1.user = user1Id;
     wallet2.user = user2Id;
   } catch (err) {
     console.log('Could not connect to the database. Exiting now...', err);

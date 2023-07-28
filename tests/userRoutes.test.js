@@ -2,7 +2,10 @@ const request = require('supertest');
 const mongoose = require("mongoose");
 const app = require('../app');
 const User = require('../models/User');
-const { user1, user2, wallet1, wallet2 } = require('./testsData');
+const { users, wallets } = require('./testsData');
+
+const [user1, user2] = users;
+const [wallet1, wallet2] = wallets;
 
 require("dotenv").config();
 

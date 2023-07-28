@@ -15,6 +15,10 @@ const Category = require('../models/Category');
 // GET all Categories
 router.get('/', getAll(Category));
 
+// GET Category/ies by query parameters
+const allowedQueryParams = ['user'];
+router.get('/find', getByQuery(Category, allowedQueryParams));
+
 // GET one Category
 router.get('/:id', getItem(Category), getOne(Category));
 
