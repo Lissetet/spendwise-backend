@@ -113,7 +113,6 @@ describe('Transaction routes', () => {
 
     let expectedErrorParts = [
       'amount: Path `amount` is required',
-      'date: Path `date` is required',
       'user: Path `user` is required',
       'type: Path `type` is required',
     ];

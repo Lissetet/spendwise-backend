@@ -6,7 +6,7 @@ const BudgetSchema = new mongoose.Schema({
   start_date: { type: Date, required: true },
   end_date: { type: Date, required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: String, required: true  },
 });
 
 module.exports = mongoose.model('Budget', BudgetSchema);

@@ -16,7 +16,7 @@ const Category = require('../models/Category');
 router.get('/', getAll(Category));
 
 // GET Category/ies by query parameters
-const allowedQueryParams = ['user'];
+const allowedQueryParams = ['user', 'parent'];
 router.get('/find', getByQuery(Category, allowedQueryParams));
 
 // GET one Category
@@ -26,7 +26,7 @@ router.get('/:id', getItem(Category), getOne(Category));
 router.post('/', createItem(Category));
 
 // UPDATE one Category
-const allowedUpdates = ['name', 'users'];
+const allowedUpdates = ['name', 'alias'];
 router.patch('/:id', getItem(Category), updateItem(Category, allowedUpdates)); 
 
 // DELETE a Category

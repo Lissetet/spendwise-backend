@@ -14,7 +14,7 @@ const validateEmail = () => async (req, res, next) => {
 
 const getAll = (Model) => async (req, res) => {
   try {
-    const items = await Model.find();
+    const items = await Model.find({...req.query});
     res.status(200).json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });

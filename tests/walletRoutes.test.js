@@ -2,7 +2,7 @@ const request = require('supertest');
 const mongoose = require("mongoose");
 const app = require('../app');
 const User = require('../models/User');
-const Wallet = require('../models/Wallet');
+const Account = require('../models/Account');
 const { users, wallets } = require('./testsData');
 
 const [user1, user2] = users;

@@ -25,7 +25,7 @@ router.get('/:id', getItem(Transaction), getOne(Transaction));
 router.post('/', createItem(Transaction));
 
 // UPDATE one Transaction
-const allowedUpdates = ['amount', 'description', 'date', 'type', 'wallet', 'category'];
+const allowedUpdates = ['amount', 'description', 'date', 'type', 'account', 'category'];
 router.patch('/:id', getItem(Transaction), updateItem(Transaction, allowedUpdates)); 
 
 // DELETE a Transaction
