@@ -9,13 +9,11 @@ app.get("/", (req, res) => {
 });
 
 // initialize routes
-const userRoutes = require('./routes/userRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const accountRoutes = require('./routes/accountRoutes');
 const eventRoutes = require('./routes/eventRoutes');
-app.use('/users', userRoutes);
 app.use('/budgets', budgetRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/transactions', transactionRoutes);
