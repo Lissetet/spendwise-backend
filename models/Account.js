@@ -14,9 +14,7 @@ const AccountSchema = new mongoose.Schema({
       'credit',
       'loan', 
       'property',
-      'other'
     ], 
-    default: 'other' 
   },
   user: { type: String, required: true  },
 }, {
