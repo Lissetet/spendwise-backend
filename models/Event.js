@@ -15,6 +15,7 @@ const EventSchema = new mongoose.Schema({
     default: 'default' 
   },
   tag: { type: String, required: true },
+  timestamp: { type: Number, required: true },
   user: { type: String, required: true  },
 });
 

@@ -21,7 +21,7 @@ router.get('/:id', getItem(Event), getOne(Event));
 router.post('/', createItem(Event));
 
 // UPDATE one Event
-const allowedUpdates = ['year', 'month', 'day', 'tag', 'type'];
+const allowedUpdates = ['year', 'month', 'day', 'tag', 'type', 'timestamp'];
 router.patch('/:id', getItem(Event), updateItem(Event, allowedUpdates)); 
 
 // DELETE a Event
